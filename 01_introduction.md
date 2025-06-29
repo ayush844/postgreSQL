@@ -1,3 +1,8 @@
+***postgres notes:***    
+```
+https://www.canva.com/design/DAGGQI3jsQo/aZYZy0_PSEFsRfFUMNZx2g/edit
+```
+
 # ✅ **What is a Database?**
 
 A **database** is a structured collection of data that is stored and accessed electronically.
@@ -163,3 +168,162 @@ DATABASE (CollegeDB)
 
 ---
 
+---
+---
+
+---
+
+## 🚀 Starting PostgreSQL on Terminal
+
+### 🔧 Step 1: Start PostgreSQL service
+
+```bash
+sudo systemctl start postgresql
+```
+
+You can check its status with:
+
+```bash
+sudo systemctl status postgresql
+```
+
+**Expected Output:**
+
+```
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Sat 2025-06-28 10:49:37 IST; 11h ago
+   Main PID: 1661 (code=exited, status=0/SUCCESS)
+        CPU: 960us
+```
+
+---
+
+### 🛑 Step 2: Accessing `psql` as current user
+
+```bash
+psql
+```
+
+**Error you may see:**
+
+```
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: 
+FATAL:  role "ayush" does not exist
+```
+
+This means the current Linux user (`ayush`) does not have a PostgreSQL role.
+
+---
+
+### 👤 Step 3: Switch to the `postgres` system user
+
+```bash
+sudo -iu postgres
+```
+
+Now run:
+
+```bash
+psql
+```
+
+You’ll enter the `psql` prompt:
+
+```
+psql (17.5 (Ubuntu 17.5...), server 16.9 ...)
+Type "help" for help.
+```
+
+---
+
+### 📂 Step 4: List existing databases
+
+```sql
+\l
+```
+
+**Output:**
+
+```
+List of databases
+ Name           |  Owner   | Encoding | ...
+----------------+----------+----------+-----
+ TodoApplicationDatabase | postgres | UTF8     | ...
+ my_pgdb                 | postgres | UTF8     | ...
+ postgres                | postgres | UTF8     | ...
+ template0               | postgres | UTF8     | ...
+ template1               | postgres | UTF8     | ...
+```
+
+---
+
+### 🔐 Step 5: Set password for `postgres` user
+
+```sql
+\password postgres
+```
+
+---
+
+### ❌ Mistake: Trying to run SQL command from shell
+
+```bash
+CREATE DATABASE TEST;
+```
+
+**Output:**
+
+```
+CREATE: command not found
+```
+
+> ⚠️ This is wrong because `CREATE DATABASE` is an SQL command, not a shell command.
+
+---
+
+### ✅ Correct: Create database from inside `psql`
+
+```bash
+psql
+```
+
+Then run:
+
+```sql
+CREATE DATABASE TEST;
+```
+
+**Output:**
+
+```
+CREATE DATABASE
+```
+
+---
+
+### 📋 Verify database was created
+
+```sql
+\l
+```
+
+**New Output includes:**
+
+```
+test | postgres | UTF8 | libc | ...
+```
+
+---
+
+### 🚪 Exit from `psql` and `postgres` user
+
+```sql
+\q
+```
+
+```bash
+exit
+```
+
+---
